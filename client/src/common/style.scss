@@ -1,0 +1,7 @@
+@mixin dayItem($w: 107rpx, $h: 107rpx, $lh: 107rpx) {
+    width: $w;
+    height: $h;
+    line-height: $lh;
+    text-align: center;
+}
+

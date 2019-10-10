@@ -1,0 +1,53 @@
+@import '../../common/style.scss';
+
+$day-item-height: 107.1428571428571rpx;
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    text-align:left;
+    .day {
+        font-size: 100rpx;
+        margin-left: 72rpx;
+        margin-right: 18rpx;
+    }
+    .year, .month, .week {
+        display: inline-flex;
+        align-items: flex-end;
+        font-size: 36rpx;
+        padding-bottom: 24rpx;
+    }
+    .year {
+        padding-left: 6rpx;
+        color: #d3d3d3;
+    }
+    .week {
+        justify-content: flex-end;
+        flex-grow: 1;
+        margin-right: 36rpx;
+    }
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+    .head {
+        display: flex;
+        flex-wrap: wrap;
+        height:60rpx;
+        line-height:50rpx;
+        .item {
+            @include dayItem($day-item-height, 100%, 100%);
+            flex-grow: 1;
+        }
+    }
+    
+    .days {
+        display: flex;
+        flex-wrap: wrap;
+        day {
+            @include dayItem($day-item-height, 150rpx, rpx);
+            flex-grow: 1;
+        }
+    }
+}
