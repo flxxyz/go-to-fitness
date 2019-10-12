@@ -1,0 +1,45 @@
+.picker-seleter {
+  position: relative;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  .picker-mark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 725px;
+  }
+
+  .picker-control {
+    position: absolute;
+    bottom: 400px;
+    width: 100%;
+    background: #fff;
+    .picker-control-button {
+      padding: 0 20px;
+      height: 80px;
+      line-height: 80px;
+    }
+  }
+
+  .picker {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 400px;
+
+    .picker-column {
+      background: #fff;
+
+      .picker-column-item {
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+      }
+    }
+  }
+}

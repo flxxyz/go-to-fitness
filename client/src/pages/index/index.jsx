@@ -5,30 +5,52 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import './index.scss'
+import { createDate, getDateParams, getDays } from '../../common/utils'
 
-import Day from '../../components/day'
+import Days from '../../components/days'
+import PickerSelecter from '../../components/picker'
 
 export default class Index extends Component {
     constructor(props) {
         super(props)
 
-        const t = new Date()
-        let thisYear = t.getFullYear()
-        let thisMonth = t.getMonth()
-        let thisWeek = t.getDay()
-        let thisDay = t.getDate()
-        let firstTime = new Date(thisYear, thisMonth)
-        let firstDay = firstTime.getDay()
-        let lastTime = new Date(thisYear, thisMonth + 1, 0)
-        let lastDate = lastTime.getDate()
-        let lastDay = lastTime.getDay()
-        let realDays = lastDate
-        let days = realDays + firstDay + (6 - lastDay)
+        const t = createDate()
+        this.initDate(t)
 
         this.state = {
             weekDayName: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
             weekDayNameShort: ['日', '一', '二', '三', '四', '五', '六'],
             monthDayName: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+            pickerHeight: '100%',
+        }
+    }
+
+    config = {
+        navigationBarTitleText: '该健身啦'
+    }
+
+    //在render之前执行
+    componentDidMount() {
+        console.log('componentDidMount')
+    }
+
+    initDate(t) {
+        const {
+            thisYear,
+            thisMonth,
+            thisWeek,
+            thisDay,
+            firstTime,
+            firstDay,
+            lastTime,
+            lastDate,
+            lastDay,
+            realDays,
+            days,
+        } = getDateParams(t)
+        const daysData = getDays(days, lastDay, realDays, thisYear, thisMonth)
+
+        this.setState({
             thisYear: thisYear,  //今年
             thisMonth: thisMonth,  //这个月
             thisWeek: thisWeek,  //今天星期几
@@ -40,58 +62,38 @@ export default class Index extends Component {
             firstDay: firstDay,  //这个月第一个日子星期几
             realDays: realDays,  //实际的天数
             days: days,  //这个月包括占位符的所有天数
-            dayData: [],  //本月所有日子
-        }
-    }
-
-    config = {
-        navigationBarTitleText: '该健身啦'
-    }
-
-    //在render之前执行
-    componentWillMount() {
-        const { days, firstDay, realDays, thisYear, thisMonth } = this.state
-        let data = []
-
-        //处理本月日子
-        for (var i = 1; i <= days; i++) {
-            let day = i;
-            let isPlaceholder = false;
-
-            //判断需要的占位符
-            if ((i <= firstDay) || (i > (realDays + firstDay))) {
-                day = null;
-                isPlaceholder = true
-            } else {
-                day -= firstDay
-            }
-
-            data.push({
-                year: thisYear,
-                month: thisMonth + 1,
-                day: day,
-                isPlaceholder: isPlaceholder,
-            })
-        }
-
-        // console.log(this.state)
-
-        this.setState({
-            dayData: data,
+            daysData: daysData,  //本月所有日子
         })
     }
 
-    changeDate() {
-        const { thisWeek, thisDay, thisMonth, thisYear } = this.state
-        console.log(thisDay, thisWeek, thisMonth, thisYear)
+    changeDate = (e) => {
+        const t = createDate(e.year, e.month + 1, e.day)
+        this.initDate(t)
+    }
+
+    openPicker() {
+        this.setState({
+            pickerHeight: '0%'
+        })
+    }
+
+    handlerPicker = (opts) => {
+        if (opts) {
+            console.log(opts)
+            const t = createDate(opts.year, opts.month, opts.day)
+            this.initDate(t)
+        }
+        this.setState({
+            pickerHeight: '100%'
+        })
     }
 
     render() {
-        const { dayData, thisWeek, thisDay, thisMonth, thisYear, monthDayName, weekDayName, weekDayNameShort } = this.state
+        const { daysData, thisWeek, thisDay, thisMonth, thisYear, monthDayName, weekDayName, weekDayNameShort, pickerHeight } = this.state
 
         return (
             <View className='index'>
-                <View className='header' onClick={this.changeDate}>
+                <View className='header' onClick={this.openPicker}>
                     <Text className='day'>
                         {
                             (thisDay < 10) ? `0${thisDay}` : thisDay
@@ -110,17 +112,17 @@ export default class Index extends Component {
                                 )
                             })
                         }
-
                     </View>
-                    <View className='days'>
-                        {
-                            dayData.map((data) => {
-                                return (
-                                    <Day date={data} key />
-                                )
-                            })
-                        }
-                    </View>
+                    <Days data={daysData} />
+                </View>
+                <View className='picker' style={{ top: pickerHeight }}>
+                    <PickerSelecter handlerPicker={this.handlerPicker}
+                        changeDate={this.changeDate}
+                        monthDayName={monthDayName}
+                        daysData={daysData}
+                        thisYear={thisYear}
+                        thisMonth={thisMonth}
+                        thisDay={thisDay} />
                 </View>
             </View>
         )
