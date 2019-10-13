@@ -80,28 +80,28 @@ export default class PickerSelecter extends Component {
                 <PickerView className='picker' value={value} onChange={this.onChange}>
                     <PickerViewColumn className="picker-column">
                         {
-                            years.map((item, index) => {
+                            years.map(item => {
                                 return (
-                                    <View className='picker-column-item' key={index}>{item}年</View>
+                                    <View className='picker-column-item' key>{item}年</View>
                                 )
                             })
                         }
                     </PickerViewColumn>
                     <PickerViewColumn className="picker-column">
                         {
-                            months.map((item, index) => {
+                            months.map(item => {
                                 return (
-                                    <View className='picker-column-item' key={index}>{item}</View>
+                                    <View className='picker-column-item' key>{item}</View>
                                 )
                             })
                         }
                     </PickerViewColumn>
                     <PickerViewColumn className="picker-column">
                         {
-                            daysData.map((item, index) => {
+                            daysData.map(item => {
                                 if (!item.isPlaceholder) {
                                     return (
-                                        <View className='picker-column-item' key={index}>{item.day}日</View>
+                                        <View className='picker-column-item' key>{item.day}日</View>
                                     )
                                 }
                             })
