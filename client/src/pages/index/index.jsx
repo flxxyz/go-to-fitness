@@ -14,14 +14,12 @@ export default class Index extends Component {
     constructor(props) {
         super(props)
 
-        const t = createDate()
-        this.initDate(t)
-
         this.state = {
             weekDayName: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
             weekDayNameShort: ['日', '一', '二', '三', '四', '五', '六'],
             monthDayName: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
             pickerHeight: '100%',
+            showLogin: true,
         }
     }
 
@@ -32,6 +30,8 @@ export default class Index extends Component {
     //在render之前执行
     componentDidMount() {
         console.log('componentDidMount')
+
+        this.isAuthSuccessful()
     }
 
     initDate(t) {
@@ -88,34 +88,96 @@ export default class Index extends Component {
         })
     }
 
-    render() {
+    isAuthSuccessful() {
+        const userInfo = Taro.getStorageSync('userInfo')
+        if (userInfo) {
+            const t = createDate()
+            this.initDate(t)
+
+            this.setState({
+                showLogin: false,
+            })
+        }
+    }
+
+    login() {
+        return (
+            <View className={'login'}>
+                <Button className={'user'} openType='getUserInfo' onGetUserInfo={this.getUserInfo}>
+                    <OpenData className={'avatar'} type='userAvatarUrl' />
+                </Button>
+                <View className={'welcome'}>欢迎你! <OpenData type='userNickName' /></View>
+                <View className={'welcome-sub'}>点击头像登录</View>
+            </View>
+        )
+    }
+
+    getUserInfo(e) {
+        if (e.detail.hasOwnProperty('userInfo')) {
+            const userInfo = e.detail.userInfo
+            Taro.setStorageSync('userInfo', userInfo)
+
+            Taro.cloud.callFunction({
+                name: 'addUser',
+                data: userInfo,
+            }).then((res) => {
+                console.log('cloud function result:', res)
+            })
+
+            this.toast({
+                title: '授权成功',
+                icon: 'success',
+            })
+
+            this.isAuthSuccessful()
+        } else {
+            this.toast({
+                title: '授权失败',
+            })
+        }
+    }
+
+    toast(opts) {
+        opts.title = opts.title || ''
+        opts.icon = opts.icon || 'none'
+        opts.callback = opts.callback || function () { }
+
+        Taro.showToast({
+            title: opts.title,
+            icon: opts.icon,
+            duration: 2000,
+            complete: opts.callback
+        })
+    }
+
+    index() {
         const { daysData, thisWeek, thisDay, thisMonth, thisYear, monthDayName, weekDayName, weekDayNameShort, pickerHeight } = this.state
 
         return (
-            <View className='index'>
-                <View className='header' onClick={this.openPicker}>
-                    <Text className='day'>
+            <View className={'index'}>
+                <View className={'header'} onClick={this.openPicker}>
+                    <Text className={'day'}>
                         {
                             (thisDay < 10) ? `0${thisDay}` : thisDay
                         }
                     </Text>
-                    <Text className='month'>{monthDayName[thisMonth]}</Text>
-                    <Text className='year'>{thisYear}</Text>
-                    <Text className='week'>{weekDayName[thisWeek]}</Text>
+                    <Text className={'month'}>{monthDayName[thisMonth]}</Text>
+                    <Text className={'year'}>{thisYear}</Text>
+                    <Text className={'week'}>{weekDayName[thisWeek]}</Text>
                 </View>
-                <View className='main'>
-                    <View className='head'>
+                <View className={'main'}>
+                    <View className={'head'}>
                         {
                             weekDayNameShort.map((value, index) => {
                                 return (
-                                    <View className='item' key={index}>{value}</View>
+                                    <View className={'item'} key={index}>{value}</View>
                                 )
                             })
                         }
                     </View>
                     <Days data={daysData} />
                 </View>
-                <View className='picker' style={{ top: pickerHeight }}>
+                <View className={'picker'} style={{ top: pickerHeight }}>
                     <PickerSelecter handlerPicker={this.handlerPicker}
                         changeDate={this.changeDate}
                         monthDayName={monthDayName}
@@ -124,6 +186,14 @@ export default class Index extends Component {
                         thisMonth={thisMonth}
                         thisDay={thisDay} />
                 </View>
+            </View>
+        )
+    }
+
+    render() {
+        return (
+            <View>
+                {this.state.showLogin ? this.login() : this.index()}
             </View>
         )
     }

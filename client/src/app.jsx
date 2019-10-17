@@ -1,5 +1,4 @@
 import Taro, { Component } from '@tarojs/taro'
-import '@tarojs/async-await'
 import Index from './pages/index'
 
 import './app.scss'
@@ -14,7 +13,7 @@ class App extends Component {
 
   config = {
     pages: [
-      'pages/index/index'
+      'pages/index/index',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -27,7 +26,9 @@ class App extends Component {
 
   componentDidMount() {
     if (process.env.TARO_ENV === 'weapp') {
-      Taro.cloud.init()
+      Taro.cloud.init({
+        traceUser: true
+      })
     }
   }
 

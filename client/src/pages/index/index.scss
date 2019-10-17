@@ -1,49 +1,53 @@
 @import "../../common/style.scss";
 
-.header {
-  display: flex;
-  flex-wrap: wrap;
-  text-align: left;
-  .day {
-    font-size: 100rpx;
-    margin-left: 72rpx;
-    margin-right: 18rpx;
-  }
-  .year,
-  .month,
-  .week {
-    display: inline-flex;
-    align-items: flex-end;
-    font-size: 36rpx;
-    padding-bottom: 24rpx;
-  }
-  .year {
-    padding-left: 6rpx;
-    color: #d3d3d3;
-  }
-  .week {
-    justify-content: flex-end;
-    flex-grow: 1;
-    margin-right: 36rpx;
-  }
-}
-
-.main {
-  width: 100%;
-  height: 100%;
-  .head {
+.index {
+  .header {
     display: flex;
     flex-wrap: wrap;
-    height: 60rpx;
-    line-height: 50rpx;
-    .item {
-      @include dayItem($day-item-height, 100%, 100%);
+    text-align: left;
+
+    .day {
+      font-size: 100rpx;
+      margin-left: 72rpx;
+      margin-right: 18rpx;
+    }
+
+    .year,
+    .month,
+    .week {
+      display: inline-flex;
+      align-items: flex-end;
+      font-size: 36rpx;
+      padding-bottom: 24rpx;
+    }
+
+    .year {
+      padding-left: 6rpx;
+      color: #d3d3d3;
+    }
+
+    .week {
+      justify-content: flex-end;
       flex-grow: 1;
+      margin-right: 36rpx;
     }
   }
-}
 
-.index {
+  .main {
+    width: 100%;
+    height: 100%;
+    .head {
+      display: flex;
+      flex-wrap: wrap;
+      height: 60rpx;
+      line-height: 50rpx;
+      .item {
+        @include dayItem($day-item-height, 100%, 100%);
+        flex-grow: 1;
+      }
+    }
+  }
+
   .picker {
     transition: all 0.5s;
     position: fixed;
@@ -51,5 +55,44 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.login {
+  position: relative;
+
+  .user {
+    width: 200px;
+    height: 200px;
+    margin: 200px auto 0 auto;
+    padding: 0;
+    border: 0;
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .welcome,
+  .welcome-sub {
+    margin: 30px 0;
+    text-align: center;
+  }
+
+  .welcome-sub {
+    font-size: 32px;
+    color: #999999;
+  }
+
+  .login-mark {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
   }
 }
