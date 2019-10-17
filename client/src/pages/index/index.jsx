@@ -5,7 +5,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import './index.scss'
-import { createDate, getDateParams, getDays } from '../../common/utils'
+import { createDate, getDateParams, getDays } from '../../lib/tool'
 
 import Days from '../../components/days'
 import PickerSelecter from '../../components/picker'

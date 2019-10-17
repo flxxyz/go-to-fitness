@@ -1,11 +1,12 @@
-@import "../../common/style.scss";
-
 .days {
   display: flex;
   flex-wrap: wrap;
 
   .day {
-    @include dayItem($day-item-height, 150px, 150px);
+    width: 107.1428571428571px;
+    height: 206.5px;
+    line-height: 206.5px;
+    text-align: center;
     flex-grow: 1;
   
     .text {

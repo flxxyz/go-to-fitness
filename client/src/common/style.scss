@@ -1,9 +1,0 @@
-$day-item-height: 107.1428571428571px;
-
-@mixin dayItem($w: 107px, $h: 107px, $lh: 107px) {
-    width: $w;
-    height: $h;
-    line-height: $lh;
-    text-align: center;
-}
-
