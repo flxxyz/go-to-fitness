@@ -3,8 +3,7 @@ module.exports = {
     NODE_ENV: '"development"',
     WXCLOUD_ENV: 'dev-e7bf9d'
   },
-  defineConstants: {
-  },
+  defineConstants: {},
   weapp: {},
   h5: {}
 }

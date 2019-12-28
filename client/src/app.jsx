@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 import Taro, { Component } from '@tarojs/taro'
 import Index from './pages/index'
 

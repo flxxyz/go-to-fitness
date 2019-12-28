@@ -1,7 +1,4 @@
-/* eslint-disable react/jsx-key */
-/* eslint-disable taro/no-jsx-in-class-method */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable no-unused-vars */
+
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import './oldIndex.scss'
@@ -139,7 +136,7 @@ export default class OldIndex extends Component {
                     title: '授权成功',
                     icon: 'success',
                 })
-    
+
                 this.isAuthSuccessful()
             })
         } else {
@@ -171,7 +168,7 @@ export default class OldIndex extends Component {
 
     index() {
         const { daysData, thisWeek, thisDay, thisMonth, thisYear, monthDayName, weekDayName, weekDayNameShort, pickerHeight } = this.state
-        
+
         const todo = [
             {
                 date: '',
