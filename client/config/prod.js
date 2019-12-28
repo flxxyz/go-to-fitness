@@ -1,6 +1,7 @@
 module.exports = {
   env: {
-    NODE_ENV: '"production"'
+    NODE_ENV: '"production"',
+    WXCLOUD_ENV: 'dev-e7bf9d'
   },
   defineConstants: {
   },

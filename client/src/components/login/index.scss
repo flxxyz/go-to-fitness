@@ -1,0 +1,40 @@
+@import '../../../node_modules/taro-ui/dist/style/components/toast.scss';
+
+.login {
+  position: relative;
+
+  .user {
+    width: 200px;
+    height: 200px;
+    margin: 200px auto 0 auto;
+    padding: 0;
+    border: 0;
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .welcome,
+  .welcome-sub {
+    margin: 30px 0;
+    text-align: center;
+  }
+
+  .welcome-sub {
+    font-size: 32px;
+    color: #999999;
+  }
+
+  .login-mark {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+  }
+}

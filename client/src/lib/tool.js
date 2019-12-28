@@ -10,9 +10,10 @@ const getDateParams = (t) => {
     let thisMonth = t.getMonth()
     let thisWeek = t.getDay()
     let thisDay = t.getDate()
-    if (thisMonth + 1 > 11) {
-        thisYear++
-    }
+    console.log(thisMonth, thisDay)
+    // if (thisMonth + 1 > 11) {
+    //     thisDay++
+    // }
     let lastTime = new Date(thisYear, thisMonth, 1)  //这个月第一天
     let lastDate = lastTime.getDate()  //这个月第一天是几号
     let lastDay = lastTime.getDay()  //这个月第一天星期几

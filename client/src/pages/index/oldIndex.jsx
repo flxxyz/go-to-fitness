@@ -4,13 +4,14 @@
 /* eslint-disable no-unused-vars */
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import './index.scss'
+import './oldIndex.scss'
 import { createDate, getDateParams, getDays } from '../../lib/tool'
 
 import Days from '../../components/days'
 import PickerSelecter from '../../components/picker'
+import TodoList from '../../components/todo/list'
 
-export default class Index extends Component {
+export default class OldIndex extends Component {
     constructor(props) {
         super(props)
 
@@ -67,7 +68,8 @@ export default class Index extends Component {
     }
 
     changeDate = (e) => {
-        const t = createDate(e.year, e.month + 1, e.day)
+        console.log(e)
+        const t = createDate(e.year, e.month, e.day)
         this.initDate(t)
     }
 
@@ -89,13 +91,21 @@ export default class Index extends Component {
     }
 
     isAuthSuccessful() {
-        const userInfo = Taro.getStorageSync('userInfo')
-        if (userInfo) {
+        const userId = Taro.getStorageSync('userId')
+        console.log('[isAuthSuccessful] userId', userId)
+        if (userId) {
             const t = createDate()
             this.initDate(t)
 
+            // const daysData = this.state.daysData
+            // const newDaysData = daysData.map((date) => {
+            //     date.color = this.color()
+            //     return date
+            // })
+
             this.setState({
                 showLogin: false,
+                // daysData: newDaysData
             })
         }
     }
@@ -115,6 +125,7 @@ export default class Index extends Component {
     getUserInfo(e) {
         if (e.detail.hasOwnProperty('userInfo')) {
             const userInfo = e.detail.userInfo
+            console.log('getUserInfo', userInfo)
             Taro.setStorageSync('userInfo', userInfo)
 
             Taro.cloud.callFunction({
@@ -122,14 +133,15 @@ export default class Index extends Component {
                 data: userInfo,
             }).then((res) => {
                 console.log('cloud function result:', res)
-            })
+                Taro.setStorageSync('userId', res.result._id)
 
-            this.toast({
-                title: '授权成功',
-                icon: 'success',
+                this.toast({
+                    title: '授权成功',
+                    icon: 'success',
+                })
+    
+                this.isAuthSuccessful()
             })
-
-            this.isAuthSuccessful()
         } else {
             this.toast({
                 title: '授权失败',
@@ -150,8 +162,30 @@ export default class Index extends Component {
         })
     }
 
+    color() {
+        let max = 5;
+        let min = 1;
+        let rand = parseInt(Math.random() * (max - min + 1) + min, 10)
+        return `level-${rand}`;
+    }
+
     index() {
         const { daysData, thisWeek, thisDay, thisMonth, thisYear, monthDayName, weekDayName, weekDayNameShort, pickerHeight } = this.state
+        
+        const todo = [
+            {
+                date: '',
+                text: '任务1',
+            },
+            {
+                date: '',
+                text: '任务2',
+            },
+            {
+                date: '',
+                text: '任务3',
+            }
+        ]
 
         return (
             <View className={'index'}>
@@ -185,6 +219,9 @@ export default class Index extends Component {
                         thisYear={thisYear}
                         thisMonth={thisMonth}
                         thisDay={thisDay} />
+                </View>
+                <View className={'todo'}>
+                    <TodoList data={todo} />
                 </View>
             </View>
         )

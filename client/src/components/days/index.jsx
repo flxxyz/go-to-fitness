@@ -26,13 +26,6 @@ export default class Days extends Component {
         }
     }
 
-    color() {
-        let max = 5;
-        let min = 1;
-        let rand = parseInt(Math.random() * (max - min + 1) + min, 10)
-        return `level-${rand}`;
-    }
-
     render() {
         const { data } = this.state
 
@@ -41,7 +34,12 @@ export default class Days extends Component {
                 {
                     data.map((date) => {
                         return (
-                            <View className={!date.isPlaceholder ? `day ${this.color()}` : 'day'} onClick={() => this.onBtn(date)} key>
+                            <View className={!date.isPlaceholder ? `day ${date.color}` : 'day'} 
+                                onClick={() => this.onBtn(date)}
+                                hoverClass={'touch'}
+                                hoverStartTime={10}
+                                hoverStayTime={100}
+                                key>
                                 <Text className={'text'}>
                                     {
                                         !date.isPlaceholder ? date.day : ''

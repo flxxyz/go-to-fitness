@@ -1,40 +1,63 @@
 import Taro, { Component } from "@tarojs/taro"
-import { View, Text, Button } from "@tarojs/components"
+import { View, Button } from "@tarojs/components"
+import { AtToast } from 'taro-ui'
+
+import './index.scss'
 
 export default class Login extends Component {
-  state = {
-    context: {}
+  constructor(props) {
+    super(props)
+    this.state = {
+      text: '授权失败',
+      status: 'error',
+      isOpened: false,
+    }
   }
 
-  componentWillMount() {}
+  getUserInfo(e) {
+    const params = {
+      isOpened: true
+    }
 
-  componentDidMount() {}
+    if (e.detail.hasOwnProperty('userInfo')) {
+      const userInfo = e.detail.userInfo
+      Taro.setStorageSync('userInfo', userInfo)
 
-  componentWillUnmount() {}
+      Taro.cloud.callFunction({
+        name: 'addUser',
+        data: userInfo,
+      }).then(res => {
+        console.log('cloud function result:', res)
+        if (res.result.hasOwnProperty('_id')) {
+          Taro.setStorageSync('userId', res.result._id)
 
-  componentDidShow() {}
+          Object.assign(params, {
+            text: '授权成功',
+            status: 'success',
+          })
 
-  componentDidHide() {}
+          setTimeout(() => {
+            this.props.onLoginState(false)
+          }, 1500)
+        }
 
-  getLogin = () => {
-    Taro.cloud
-      .callFunction({
-        name: "login",
-        data: {}
+        this.setState(params)
       })
-      .then(res => {
-        console.log(res)
-        this.setState({
-          context: res.result
-        })
-      })
+    } else {
+      this.setState(params)
+    }
   }
 
   render() {
+    const { text, status, isOpened } = this.state
     return (
-      <View className='index'>
-        <Button onClick={this.getLogin}>获取登录云函数</Button>
-        <Text>context：{JSON.stringify(this.state.context)}</Text>
+      <View className={'login'}>
+        <Button className={'user'} openType='getUserInfo' onGetUserInfo={this.getUserInfo}>
+          <OpenData className={'avatar'} type='userAvatarUrl' />
+        </Button>
+        <View className={'welcome'}>欢迎你! <OpenData type='userNickName' /></View>
+        <View className={'welcome-sub'}>点击头像登录</View>
+        <AtToast isOpened={isOpened} text={text} status={status} duration={2000} hasMask></AtToast>
       </View>
     )
   }
