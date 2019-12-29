@@ -1,13 +1,7 @@
-import Taro, {
-  Component
-} from "@tarojs/taro"
-import {
-  View,
-  Button
-} from "@tarojs/components"
-import {
-  AtToast
-} from 'taro-ui'
+/* eslint-disable react/jsx-curly-brace-presence */
+import Taro, { Component } from "@tarojs/taro"
+import { View, Button, OpenData } from "@tarojs/components"
+import { AtToast } from 'taro-ui'
 
 import './index.scss'
 
@@ -56,50 +50,25 @@ export default class Login extends Component {
   }
 
   render() {
-    const {
-      text,
-      status,
-      isOpened
-    } = this.state
-    return ( <
-      View className = {
-        'login'
-      } >
-      <
-      Button className = {
-        'user'
-      }
-      openType = 'getUserInfo'
-      onGetUserInfo = {
-        this.getUserInfo
-      } >
-      <
-      OpenData className = {
-        'avatar'
-      }
-      type = 'userAvatarUrl' / >
-      <
-      /Button> <
-      View className = {
-        'welcome'
-      } > 欢迎你! < OpenData type = 'userNickName' / > < /View> <
-      View className = {
-        'welcome-sub'
-      } > 点击头像登录 < /View> <
-      AtToast isOpened = {
-        isOpened
-      }
-      text = {
-        text
-      }
-      status = {
-        status
-      }
-      duration = {
-        2000
-      }
-      hasMask > < /AtToast> < /
-      View >
+    const { text, status, isOpened } = this.state
+
+    return (
+      <View className={'login'}>
+        <Button className={'user'}
+          openType='getUserInfo'
+          onGetUserInfo={this.getUserInfo}
+        >
+          <OpenData className={'avatar'} type='userAvatarUrl' />
+        </Button>
+        <View className={'welcome'}>欢迎你! <OpenData type='userNickName' /></View>
+        <View className={'tips'}>点击头像登录</View>
+        <AtToast isOpened={isOpened}
+          text={text}
+          status={status}
+          duration={2000}
+          hasMask
+        />
+      </View >
     )
   }
 }

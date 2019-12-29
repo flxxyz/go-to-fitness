@@ -1,6 +1,4 @@
-import dayjs, {
-  Dayjs
-} from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import {
   MAX_ROW,
   MAX_COL,
