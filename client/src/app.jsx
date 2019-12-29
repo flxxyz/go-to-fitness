@@ -19,7 +19,7 @@ class App extends Component {
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
+      navigationBarTitleText: '我记住啦',
       navigationBarTextStyle: 'black'
     },
     cloud: true

@@ -1,0 +1,96 @@
+@import "../../assets/layout.scss";
+
+.calendar {
+  width: 700rpx;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
+    color: $字体主题色;
+
+    .date {
+      font-size: 90rpx;
+      margin-left: 18rpx;
+      margin-right: 18rpx;
+    }
+
+    .year,
+    .month,
+    .week {
+      display: inline-flex;
+      align-items: flex-end;
+      font-size: 36rpx;
+      margin-bottom: 21rpx;
+    }
+
+    .year {
+      margin-left: 6rpx;
+      color: $字体辅助色;
+    }
+
+    .week {
+      justify-content: flex-end;
+      flex-grow: 1;
+      margin-right: 18rpx;
+    }
+  }
+
+  .body {
+    background-color: #fff;
+
+    .swiper {
+      transition: all 0.6s;
+    }
+
+    .weekdays {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 18rpx 0;
+
+      .weekday {
+        width: 100rpx;
+        font-size: 28rpx;
+        text-align: center;
+      }
+    }
+
+    .fade {
+      opacity: 0.3;
+    }
+
+    .now {
+      @include BoxShadow(5rpx, $选中边框色);
+    }
+
+    .sat {
+      color: $星期六色;
+    }
+    .sat.now {
+      @include BoxShadow(5rpx, $星期六色);
+    }
+
+    .sun {
+      color: $星期天色;
+    }
+    .sun.now {
+      @include BoxShadow(5rpx, $星期天色);
+    }
+
+    .date-list {
+      display: flex;
+      flex-wrap: wrap;
+      color: $字体主题色;
+
+      .date {
+        flex-grow: 1;
+        width: 100rpx;
+        height: 40rpx;
+        text-align: center;
+        font-size: 32rpx;
+        transition: all 0.3s;
+      }
+    }
+  }
+}
