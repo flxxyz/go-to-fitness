@@ -1,21 +1,31 @@
 {
 	"miniprogramRoot": "client/dist/",
 	"cloudfunctionRoot": "cloud/functions/",
-	"projectname": "go-to-fitness",
-	"description": "go-to-fitness",
+	"projectname": "i-really-remember",
+	"description": "i-really-remember",
 	"appid": "填写appid",
 	"setting": {
 		"urlCheck": false,
 		"es6": true,
+		"enhance": true,
 		"postcss": true,
 		"minified": true,
 		"newFeature": true,
 		"nodeModules": true,
 		"autoAudits": false,
-		"uglifyFileName": true
+		"uglifyFileName": true,
+		"checkInvalidKey": true,
+		"checkSiteMap": true,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		},
+		"bundle": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.2",
+	"libVersion": "2.6.6",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {}
