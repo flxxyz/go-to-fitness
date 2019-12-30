@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable react/jsx-curly-brace-presence */
 import Taro, { Component } from "@tarojs/taro"
 import { View, Text, Swiper, SwiperItem, ScrollView } from "@tarojs/components"
@@ -172,7 +173,7 @@ export default class Calender extends Component {
                     weekdayClass = `${weekdayClass} sat`
                     break
                 }
-                return (<View className={weekdayClass} key>{value}</View>)
+                return (<View className={weekdayClass} key={value}>{value}</View>)
               })
             }
           </View>
@@ -191,7 +192,7 @@ export default class Calender extends Component {
           >
             {
               dateGroup.map((item) => (
-                <SwiperItem key>
+                <SwiperItem>
                   <ScrollView
                     className={'scroll-view'}
                     scrollY
@@ -223,7 +224,7 @@ export default class Calender extends Component {
                                 height: dateItemHeight,
                               }}
                               onClick={() => this.dateItemClick(date)}
-                              key
+                              key={date.__value.valueOf()}
                             >
                               {date.text}
                             </View>
