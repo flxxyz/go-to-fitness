@@ -1,8 +1,11 @@
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, {
+  Dayjs
+} from 'dayjs'
 import {
   MAX_ROW,
   MAX_COL,
-  DATE_FORMAT
+  DATE_FORMAT,
+  HEWEATHER_ICON,
 } from '../constant'
 
 
@@ -75,6 +78,18 @@ const generateCalendar = (date) => {
   return list
 }
 
+const getWeatherInfo = (data) => {
+  const current = generateDate(`${data.date} ${data.ss}`)
+  const now = generateDate()
+  if (now.isAfter(current)) {
+    //夜晚
+    return HEWEATHER_ICON[data.cond_code_n]
+  } else {
+    //白天
+    return HEWEATHER_ICON[data.cond_code_d]
+  }
+}
+
 export {
   generateDate,
   getFormatDate,
@@ -83,4 +98,5 @@ export {
   weekdaysShort,
   weekdaysMin,
   months,
+  getWeatherInfo,
 }

@@ -88,8 +88,17 @@
         width: 100rpx;
         height: 40rpx;
         text-align: center;
-        font-size: 32rpx;
+        font-size: 28rpx;
         transition: all 0.3s;
+        position: relative;
+        
+        .weather {
+          width: 32rpx;
+          height: 32rpx;
+          position: absolute;
+          right: 4rpx;
+          top: 4rpx;
+        }
       }
     }
   }

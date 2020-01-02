@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/jsx-curly-brace-presence */
 import Taro, { Component } from "@tarojs/taro"
-import { View, Text, Swiper, SwiperItem, ScrollView } from "@tarojs/components"
-
-import { generateCalendar, generateDate, weekdaysMin, getFormatDate } from '../../lib/date'
+import { View, Text, Swiper, SwiperItem, ScrollView, Image } from "@tarojs/components"
+import Holiday from '../holiday'
+import { generateCalendar, generateDate, weekdaysMin, getWeatherInfo } from '../../lib/date'
 import { MAX_ROW, DATE_FORMAT } from '../../constant'
 
 import './index.scss'
@@ -149,6 +149,15 @@ export default class Calender extends Component {
     this.props.onDateClick(date)
   }
 
+  handleWeather(date) {
+    const heweather = Taro.getStorageSync('heweather')
+    if (heweather[date] && !date.isPlaceholder) {
+      return getWeatherInfo(heweather[date])
+    }
+
+    return false
+  }
+
   render() {
     const { dateGroup, dayjsDate, swiperHeight, dateItemHeight, swiperDuration } = this.state
 
@@ -217,6 +226,9 @@ export default class Calender extends Component {
                             dateClass = `${dateClass} now`
                           }
 
+                          const weather = this.handleWeather(date.value)
+                          const holiday = false
+
                           return (
                             <View
                               className={dateClass}
@@ -224,9 +236,18 @@ export default class Calender extends Component {
                                 height: dateItemHeight,
                               }}
                               onClick={() => this.dateItemClick(date)}
-                              key={date.__value.valueOf()}
                             >
+                              {
+                                holiday
+                                  ? <Holiday />
+                                  : null
+                              }
                               {date.text}
+                              {
+                                weather
+                                  ? <Image className={'weather'} src={weather} />
+                                  : null
+                              }
                             </View>
                           )
                         })

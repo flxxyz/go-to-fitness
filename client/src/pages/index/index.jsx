@@ -3,7 +3,7 @@ import { View } from '@tarojs/components'
 
 import Login from '../../components/login'
 import Calendar from '../../components/calendar'
-import { isLogin } from '../../lib/utils'
+import { isLogin, U } from '../../lib/utils'
 import { generateDate } from '../../lib/date'
 
 export default class Index extends Component {
@@ -20,6 +20,21 @@ export default class Index extends Component {
     }
   }
 
+  componentDidMount() {
+    Taro.request({
+      url: U(),
+      success(res) {
+        console.log(res);
+        const data = {}
+        res.data.data.map(daily => {
+          data[daily.date] = daily
+        })
+
+        Taro.setStorageSync('heweather', data)
+      }
+    })
+  }
+
   onLoginState = (showLogin) => {
     this.setState({
       showLogin
@@ -27,7 +42,6 @@ export default class Index extends Component {
   }
 
   onDateClick = (date) => {
-    // console.log(date.__value)
     this.setState({
       date: date.__value.valueOf()
     })
