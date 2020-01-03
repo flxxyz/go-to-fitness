@@ -2,8 +2,6 @@ const MAX_ROW = 6
 const MAX_COL = 7
 const DATE_FORMAT = 'YYYY-MM-DD'
 
-const URI = 'https://110be.utools.club'
-
 const HEWEATHER_KEY = ''
 
 const HEWEATHER_TEXT = {
@@ -158,7 +156,6 @@ export {
   MAX_ROW,
   MAX_COL,
   DATE_FORMAT,
-  URI,
   HEWEATHER_KEY,
   HEWEATHER_TEXT,
   HEWEATHER_ICON,

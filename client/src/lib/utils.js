@@ -1,5 +1,7 @@
 import Taro from '@tarojs/taro'
-import {URI} from '../constant'
+import {
+  HEWEATHER_KEY
+} from '../constant'
 
 const getUserId = () => {
   return Taro.getStorageSync('userId')
@@ -14,16 +16,32 @@ const isLogin = () => {
 }
 
 /**
+ * 生成url的请求字符串
+ * @param {Object} obj 
+ */
+const httpBuildQuery = (obj) => {
+  const params = []
+  Object.keys(obj).map(key => {
+    params.push(`${key}=${obj[key]}`)
+  })
+
+  return params.join('&')
+}
+
+/**
  * 获取特定API的URI
  * @param {string} method 
  */
 const U = (method) => {
-  switch(method) {
-    case 'home':
-      return `${URI}/home`
-      break
+  switch (method) {
+    case 'weather':
+      const params = {
+        location: 'auto_ip',
+        key: HEWEATHER_KEY,
+      }
+      return 'https://free-api.heweather.net/s6/weather/forecast?' + httpBuildQuery(params)
     default:
-      return URI
+      return false
   }
 }
 

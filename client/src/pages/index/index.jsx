@@ -22,7 +22,7 @@ export default class Index extends Component {
 
   componentDidMount() {
     Taro.request({
-      url: U(),
+      url: U('weather'),
       success(res) {
         console.log(res);
         const data = {}
