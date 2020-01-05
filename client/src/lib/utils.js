@@ -45,9 +45,24 @@ const U = (method) => {
   }
 }
 
+const ENV = Taro.getEnv()
+
+const delay = (delayTime = 500) => {
+  return new Promise(resolve => {
+    if (ENV === Taro.ENV_TYPE.WEB) {
+      setTimeout(() => {
+        resolve()
+      }, delayTime)
+      return
+    }
+    resolve()
+  })
+}
+
 export {
   getUserId,
   getUserInfo,
   isLogin,
   U,
+  delay,
 }

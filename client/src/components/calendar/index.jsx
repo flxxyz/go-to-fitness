@@ -23,13 +23,16 @@ export default class Calender extends Component {
       diff: 0,
     }
 
-    const { date, heweather } = props
+    const { date, heweather, isDropDown } = props
+    this.heweather = heweather
+    this.isDropDown = isDropDown
+
     const dayjsDate = generateDate(date)
     const dateGroup = this.dateGroup(dayjsDate)
     const systemInfo = Taro.getSystemInfoSync()
 
     const windowWidth = 750;
-    const windowHeight = systemInfo.windowHeight * (750 / systemInfo.windowWidth)
+    const windowHeight = systemInfo.windowHeight * (windowWidth / systemInfo.windowWidth)
     const swiperHeight = '480rpx'
     const dateItemHeight = '80rpx'
 
@@ -39,24 +42,20 @@ export default class Calender extends Component {
       dayjsDate,
       swiperHeight,
       dateItemHeight,
-      heweather,
     }
   }
 
-  componentDidMount() {
-    // const date = generateDate()
-    // console.log(date, date.format(), getFormatDate(date))
-  }
-
   componentWillReceiveProps(nextProps) {
-    const { date, heweather } = nextProps
+    const { date, heweather, isDropDown } = nextProps
+    this.heweather = heweather
+    this.isDropDown = isDropDown
+
     const dayjsDate = generateDate(date)
     const dateGroup = this.dateGroup(dayjsDate)
 
     this.setState({
       dateGroup,
       dayjsDate,
-      heweather,
     })
   }
 
@@ -114,7 +113,7 @@ export default class Calender extends Component {
   }
 
   bodyScrollViewTouchEnd() {
-    let newSwiperHeight, newDateItemHeight
+    let newSwiperHeight, newDateItemHeight, newIsDropDown
     const { windowHeight } = this.state
 
     //手指上滑的活动范围可能比50还大
@@ -123,16 +122,22 @@ export default class Calender extends Component {
         //下拉
         newSwiperHeight = (windowHeight - 130 - (40 + 36) - 40)  // weekdays的40+36像素, tips的40像素
         newDateItemHeight = Number(newSwiperHeight / MAX_ROW)
+        newIsDropDown = true
       } else if (this.touch.diff <= -50) {
         //上拉
         newSwiperHeight = 480
         newDateItemHeight = 80
+        newIsDropDown = false
       }
 
-      this.setState({
-        swiperHeight: `${newSwiperHeight}rpx`,
-        dateItemHeight: `${newDateItemHeight}rpx`,
-      })
+      if (newIsDropDown !== this.isDropDown) {
+        this.props.onDropDown(newIsDropDown)
+
+        this.setState({
+          swiperHeight: `${newSwiperHeight}rpx`,
+          dateItemHeight: `${newDateItemHeight}rpx`,
+        })
+      }
     }
 
     this.touch.stop = true
@@ -145,9 +150,8 @@ export default class Calender extends Component {
   }
 
   handleWeather(date) {
-    const { heweather } = this.state
-    if (heweather[date] && !date.isPlaceholder) {
-      return getWeatherInfo(heweather[date])
+    if (this.heweather[date] && !date.isPlaceholder) {
+      return getWeatherInfo(this.heweather[date])
     }
 
     return false

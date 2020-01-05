@@ -1,8 +1,11 @@
+/* eslint-disable react/jsx-key */
 import Taro, { Component } from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View, Swiper, SwiperItem } from '@tarojs/components'
 
 import Login from '../../components/login'
 import Calendar from '../../components/calendar'
+import Todo from '../../components/todo'
+
 import { isLogin, U } from '../../lib/utils'
 import { generateDate } from '../../lib/date'
 
@@ -19,7 +22,8 @@ export default class Index extends Component {
     this.state = {
       showLogin,
       date,
-      heweather: {}
+      heweather: {},
+      isDropDown: false,
     }
   }
 
@@ -91,27 +95,35 @@ export default class Index extends Component {
     })
   }
 
-  getWeatherTips() {
-    const { date, heweather } = this.state
-    const now = generateDate(date)
-    const format = now.format('YYYY-MM-DD')
-    if (heweather.hasOwnProperty(format)) {
-      const weather = heweather[format]
-      const heweatherData = Taro.getStorageSync('heweather')
-      const location = heweatherData.basic.location
-      const text = weather.cond_txt_d
-      const tmp_max = weather.tmp_max
-      const tmp_min = weather.tmp_min
-      const wind_dir = weather.wind_dir
-      const wind_sc = weather.wind_sc
-      return `${location}  ${text}  ${tmp_min}/${tmp_max}°C  ${wind_dir}${wind_sc}级`
-    }
+  onPrevDay = () => {
+    console.log('onPrevDay')
+    const { date } = this.state
 
-    return ''
+    const _date = generateDate(date).subtract(1, 'day')
+    this.setState({
+      date: _date.valueOf()
+    })
+  }
+
+  onDropDown = (val) => {
+    console.log('onDropDown', val)
+    this.setState({
+      isDropDown: val,
+    })
+  }
+
+  onNextDay = () => {
+    console.log('onNextDay')
+    const { date } = this.state
+
+    const _date = generateDate(date).add(1, 'day')
+    this.setState({
+      date: _date.valueOf()
+    })
   }
 
   render() {
-    const { showLogin, date, heweather } = this.state
+    const { showLogin, date, heweather, isDropDown } = this.state
 
     return (
       <View className='index'>
@@ -125,8 +137,16 @@ export default class Index extends Component {
                 onDateClick={this.onDateClick.bind(this)}
                 onPrevMonth={this.onPrevMonth.bind(this)}
                 onNextMonth={this.onNextMonth.bind(this)}
+                onDropDown={this.onDropDown.bind(this)}
+                isDropDown={isDropDown}
               />
-              <View className='tips'>{this.getWeatherTips()}</View>
+              <Todo
+                date={date}
+                heweather={heweather}
+                onPrevDay={this.onPrevDay.bind(this)}
+                onNextDay={this.onNextDay.bind(this)}
+                isDropDown={isDropDown}
+              />
             </View>
         }
       </View>
