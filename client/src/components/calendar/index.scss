@@ -44,6 +44,10 @@
 
     .swiper {
       transition: all 0.3s;
+
+      .swiper-item {
+        box-shadow: inset 0 -2rpx $字体辅助色;
+      }
     }
 
     .weekdays {

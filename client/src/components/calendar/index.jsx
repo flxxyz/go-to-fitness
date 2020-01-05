@@ -199,7 +199,7 @@ export default class Calender extends Component {
           >
             {
               dateGroup.map((item) => (
-                <SwiperItem>
+                <SwiperItem className={'swiper-item'}>
                   <ScrollView
                     className={'scroll-view'}
                     scrollY

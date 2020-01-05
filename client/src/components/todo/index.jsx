@@ -17,21 +17,18 @@ export default class Todo extends Component {
     this.isPrevDay = false
     this.isChanged = false
 
-    const { date, heweather, isDropDown } = props
-    this.heweather = heweather
-
-    const dayjsDate = generateDate(date)
-    const todoGroup = this.todoGroup(dayjsDate)
+    const { isDropDown } = props
 
     this.state = {
-      todoGroup,
+      todoGroup: [],
       isDropDown,
+      heweather: {},
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { date, heweather, isDropDown } = nextProps
-    this.heweather = heweather
+    console.log('todo', 'componentWillReceiveProps()', heweather)
 
     const dayjsDate = generateDate(date)
     const todoGroup = this.todoGroup(dayjsDate)
@@ -39,6 +36,7 @@ export default class Todo extends Component {
     this.setState({
       todoGroup,
       isDropDown,
+      heweather,
     })
   }
 
@@ -58,6 +56,7 @@ export default class Todo extends Component {
   }
 
   handleTodo(dayjsDate) {
+    const { heweather } = this.state
     const todos = []
     //查找当天待办任务
     // Taro.cloud.callFunction({
@@ -72,8 +71,8 @@ export default class Todo extends Component {
 
     const format = dayjsDate.format('YYYY-MM-DD')
     let weatherTips = ''
-    if (this.heweather.hasOwnProperty(format)) {
-      const weather = this.heweather[format]
+    if (heweather.hasOwnProperty(format)) {
+      const weather = heweather[format]
       const heweatherData = Taro.getStorageSync('heweather')
       const location = heweatherData.basic.location
       const text = weather.cond_txt_d

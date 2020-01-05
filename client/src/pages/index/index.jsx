@@ -28,39 +28,46 @@ export default class Index extends Component {
   }
 
   componentWillMount() {
-    const weatherDate = Taro.getStorageSync('weatherDate')
-    const now = generateDate()
-    const last = generateDate(weatherDate)
-    if ((weatherDate === '') || now.unix() > last.unix()) {
+    console.time('heweather')
+    this.getWeather()
+      .then(data => {
+        setTimeout(() => {
+          this.setState({
+            heweather: data
+          }, () => {
+            console.timeEnd('heweather')
+          })
+        }, 200)
+      })
+  }
+
+  shouldComponentUpdate(newProps, newState) {
+    console.log('index', 'shouldComponentUpdate', newState)
+    if (Object.keys(newState.heweather).length !== 0) return true
+    return false
+  }
+
+  getWeather() {
+    return new Promise((resolve) => {
       Taro.request({
         url: U('weather'),
         success: res => {
           const data = {}
-          if (res.data.HeWeather6[0].status === 'ok') {
-            res.data.HeWeather6[0].daily_forecast.map(daily => {
-              data[daily.date] = daily
-            })
+          if (res.data.HeWeather6[0].status === 'ok' && res.data.HeWeather6[0].update.loc) {
+            const now = generateDate()
+            const last = generateDate(res.data.HeWeather6[0].update.loc)
+            if (now.valueOf() > last.valueOf()) {
+              res.data.HeWeather6[0].daily_forecast.map(daily => {
+                data[daily.date] = daily
+              })
+            }
           }
-          Taro.setStorageSync('weatherDate', now.endOf('day').valueOf())
+
           Taro.setStorageSync('heweather', res.data.HeWeather6[0])
-          console.log('请求，存储完成')
-          this.setState({
-            heweather: data
-          })
+          resolve(data)
         }
       })
-    } else {
-      const heweatherData = Taro.getStorageSync('heweather')
-      const heweather = {}
-      if (heweatherData.hasOwnProperty('daily_forecast')) {
-        heweatherData.daily_forecast.map(daily => {
-          heweather[daily.date] = daily
-        })
-      }
-      this.setState({
-        heweather
-      })
-    }
+    })
   }
 
   onLoginState = (showLogin) => {
