@@ -21,18 +21,24 @@ export default class Index extends Component {
   }
 
   componentDidMount() {
-    Taro.request({
-      url: U('weather'),
-      success(res) {
-        console.log(res);
-        const data = {}
-        res.data.data.map(daily => {
-          data[daily.date] = daily
-        })
-
-        Taro.setStorageSync('heweather', data)
-      }
-    })
+    const weatherDate = Taro.getStorageSync('weatherDate')
+    const now = generateDate()
+    const last = generateDate(weatherDate)
+    if ((weatherDate === '') || now.unix() > last.unix()) {
+      Taro.request({
+        url: U('weather'),
+        success(res) {
+          const data = {}
+          if (res.data.HeWeather6[0].status === 'ok') {
+            res.data.HeWeather6[0].daily_forecast.map(daily => {
+              data[daily.date] = daily
+            })
+          }
+          Taro.setStorageSync('weatherDate', now.endOf('day').valueOf())
+          Taro.setStorageSync('heweather', data)
+        }
+      })
+    }
   }
 
   onLoginState = (showLogin) => {
