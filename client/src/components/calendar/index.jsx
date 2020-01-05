@@ -23,7 +23,7 @@ export default class Calender extends Component {
   constructor(props) {
     super(props)
 
-    const { date } = props
+    const { date, heweather } = props
     const dayjsDate = generateDate(date)
     const dateGroup = this.dateGroup(dayjsDate)
     const systemInfo = Taro.getSystemInfoSync()
@@ -32,7 +32,6 @@ export default class Calender extends Component {
     const windowHeight = systemInfo.windowHeight * (750 / systemInfo.windowWidth)
     const swiperHeight = '480rpx'
     const dateItemHeight = '80rpx'
-    const swiperDuration = 'all .6s'
 
     this.state = {
       windowHeight,
@@ -40,7 +39,7 @@ export default class Calender extends Component {
       dayjsDate,
       swiperHeight,
       dateItemHeight,
-      swiperDuration,
+      heweather,
     }
   }
 
@@ -50,15 +49,14 @@ export default class Calender extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log(nextProps)
-
-    const { date } = nextProps
+    const { date, heweather } = nextProps
     const dayjsDate = generateDate(date)
     const dateGroup = this.dateGroup(dayjsDate)
 
     this.setState({
       dateGroup,
       dayjsDate,
+      heweather,
     })
   }
 
@@ -116,25 +114,22 @@ export default class Calender extends Component {
   }
 
   bodyScrollViewTouchEnd() {
-    let newSwiperHeight, newDateItemHeight, newSwiperDuration
+    let newSwiperHeight, newDateItemHeight
     const { windowHeight } = this.state
 
     //手指上滑的活动范围可能比50还大
     if (touch.diff >= 20 || touch.diff <= -50) {
       if (touch.diff >= 20) {
         //下拉
-        newSwiperHeight = (windowHeight - 120 - (40 + 36))  // weekdays的40+36像素
+        newSwiperHeight = (windowHeight - 130 - (40 + 36) - 40)  // weekdays的40+36像素, tips的40像素
         newDateItemHeight = Number(newSwiperHeight / MAX_ROW)
-        newSwiperDuration = 0.3
       } else if (touch.diff <= -50) {
         //上拉
         newSwiperHeight = 480
         newDateItemHeight = 80
-        newSwiperDuration = 0.6
       }
 
       this.setState({
-        swiperDuration: `all ${newSwiperDuration}s`,
         swiperHeight: `${newSwiperHeight}rpx`,
         dateItemHeight: `${newDateItemHeight}rpx`,
       })
@@ -150,7 +145,7 @@ export default class Calender extends Component {
   }
 
   handleWeather(date) {
-    const heweather = Taro.getStorageSync('heweather')
+    const { heweather } = this.state
     if (heweather[date] && !date.isPlaceholder) {
       return getWeatherInfo(heweather[date])
     }
@@ -159,7 +154,7 @@ export default class Calender extends Component {
   }
 
   render() {
-    const { dateGroup, dayjsDate, swiperHeight, dateItemHeight, swiperDuration } = this.state
+    const { dateGroup, dayjsDate, swiperHeight, dateItemHeight } = this.state
 
     return (
       <View className={'calendar'}>
@@ -176,10 +171,10 @@ export default class Calender extends Component {
                 let weekdayClass = 'weekday'
                 switch (index) {
                   case 0:
-                    weekdayClass = `${weekdayClass} sun`
+                    weekdayClass += ' sun'
                     break
                   case 6:
-                    weekdayClass = `${weekdayClass} sat`
+                    weekdayClass += ' sat'
                     break
                 }
                 return (<View className={weekdayClass} key={value}>{value}</View>)
@@ -190,7 +185,6 @@ export default class Calender extends Component {
             className={'swiper'}
             style={{
               height: swiperHeight,
-              transition: swiperDuration
             }}
             circular
             current={1}
@@ -216,14 +210,14 @@ export default class Calender extends Component {
                           let dateClass = `date ${date.isPlaceholder ? 'fade' : ''}`
                           switch (date.__value.day()) {
                             case 0:
-                              dateClass = `${dateClass} sun`
+                              dateClass += ' sun'
                               break
                             case 6:
-                              dateClass = `${dateClass} sat`
+                              dateClass += ' sat'
                               break
                           }
                           if (dayjsDate.format(DATE_FORMAT) == date.value) {
-                            dateClass = `${dateClass} now`
+                            dateClass += ' now'
                           }
 
                           const weather = this.handleWeather(date.value)
@@ -265,5 +259,6 @@ export default class Calender extends Component {
 }
 
 Calender.defaultProps = {
-  date: Date.now()
+  date: Date.now(),
+  heweather: {},
 }
