@@ -8,20 +8,20 @@ import { MAX_ROW, DATE_FORMAT } from '../../constant'
 
 import './index.scss'
 
-let currentIndex = 1
-let swiperStartPoint = 0
-let isPrevMonth = false
-let isChanged = false
-
-const touch = {
-  stop: false,
-  Y: 0,
-  diff: 0,
-}
-
 export default class Calender extends Component {
   constructor(props) {
     super(props)
+
+    this.currentIndex = 1
+    this.swiperStartPoint = 0
+    this.isPrevMonth = false
+    this.isChanged = false
+
+    this.touch = {
+      stop: false,
+      Y: 0,
+      diff: 0,
+    }
 
     const { date, heweather } = props
     const dayjsDate = generateDate(date)
@@ -66,12 +66,12 @@ export default class Calender extends Component {
     const nowMonth = generateCalendar(dayjsDate)  // 这个月日历
     const nextMonth = generateCalendar(dayjsDate.add(1, 'month'))  // 下个月日历
 
-    const prevMonthIndex = currentIndex === 0 ? 2 : currentIndex - 1
-    const nextMonthIndex = currentIndex === 2 ? 0 : currentIndex + 1
+    const prevMonthIndex = this.currentIndex === 0 ? 2 : this.currentIndex - 1
+    const nextMonthIndex = this.currentIndex === 2 ? 0 : this.currentIndex + 1
 
     arr[prevMonthIndex] = prevMonth
     arr[nextMonthIndex] = nextMonth
-    arr[currentIndex] = nowMonth
+    arr[this.currentIndex] = nowMonth
     return arr
   }
 
@@ -81,35 +81,35 @@ export default class Calender extends Component {
 
   bodySwiperChange(e) {
     const { current } = e.detail
-    isChanged = true
-    currentIndex = current
+    this.isChanged = true
+    this.currentIndex = current
   }
 
   bodySwiperAnimationFinish() {
-    if (isChanged) {
-      isChanged = false
-      isPrevMonth ? this.props.onPrevMonth() : this.props.onNextMonth()
+    if (this.isChanged) {
+      this.isChanged = false
+      this.isPrevMonth ? this.props.onPrevMonth() : this.props.onNextMonth()
     }
   }
 
   bodySwiperTouchStart(e) {
     const { clientX } = e.changedTouches[0]
-    swiperStartPoint = clientX
+    this.swiperStartPoint = clientX
   }
 
   bodySwiperTouchEnd(e) {
     const { clientX } = e.changedTouches[0]
-    isPrevMonth = clientX - swiperStartPoint > 0
+    this.isPrevMonth = clientX - this.swiperStartPoint > 0
   }
 
   bodyScrollViewTouchStart(e) {
-    touch.stop = false
-    touch.Y = e.changedTouches[0].clientY
+    this.touch.stop = false
+    this.touch.Y = e.changedTouches[0].clientY
   }
 
   bodyScrollViewTouchMove(e) {
-    if (!touch.stop) {
-      touch.diff = e.changedTouches[0].clientY - touch.Y
+    if (!this.touch.stop) {
+      this.touch.diff = e.changedTouches[0].clientY - this.touch.Y
     }
   }
 
@@ -118,12 +118,12 @@ export default class Calender extends Component {
     const { windowHeight } = this.state
 
     //手指上滑的活动范围可能比50还大
-    if (touch.diff >= 20 || touch.diff <= -50) {
-      if (touch.diff >= 20) {
+    if (this.touch.diff >= 20 || this.touch.diff <= -50) {
+      if (this.touch.diff >= 20) {
         //下拉
         newSwiperHeight = (windowHeight - 130 - (40 + 36) - 40)  // weekdays的40+36像素, tips的40像素
         newDateItemHeight = Number(newSwiperHeight / MAX_ROW)
-      } else if (touch.diff <= -50) {
+      } else if (this.touch.diff <= -50) {
         //上拉
         newSwiperHeight = 480
         newDateItemHeight = 80
@@ -135,9 +135,9 @@ export default class Calender extends Component {
       })
     }
 
-    touch.stop = true
-    touch.Y = 0
-    touch.diff = 0
+    this.touch.stop = true
+    this.touch.Y = 0
+    this.touch.diff = 0
   }
 
   dateItemClick(date) {
