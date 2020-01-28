@@ -2,6 +2,7 @@ const MAX_ROW = 6
 const MAX_COL = 7
 const DATE_FORMAT = 'YYYY-MM-DD'
 
+//和风天气key
 const HEWEATHER_KEY = ''
 
 const HEWEATHER_TEXT = {

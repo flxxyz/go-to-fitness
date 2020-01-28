@@ -1,6 +1,8 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 /* eslint-disable react/jsx-key */
 import Taro, { Component } from '@tarojs/taro'
-import { View, Swiper, SwiperItem } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
+import { AtFab } from 'taro-ui'
 
 import Login from '../../components/login'
 import Calendar from '../../components/calendar'
@@ -8,6 +10,7 @@ import Todo from '../../components/todo'
 
 import { isLogin, U } from '../../lib/utils'
 import { generateDate } from '../../lib/date'
+import { HEWEATHER_KEY } from '../../constant'
 
 import './index.scss'
 
@@ -17,7 +20,8 @@ export default class Index extends Component {
     const showLogin = !isLogin() ? true : false
     this.onLoginState(showLogin)
 
-    const date = generateDate().valueOf()
+    this._date = generateDate()
+    const date = this._date.valueOf()
 
     this.state = {
       showLogin,
@@ -29,8 +33,8 @@ export default class Index extends Component {
 
   componentWillMount() {
     console.time('heweather')
-    this.getWeather()
-      .then(data => {
+    if (HEWEATHER_KEY) {
+      this.getWeather().then(data => {
         setTimeout(() => {
           this.setState({
             heweather: data
@@ -39,14 +43,12 @@ export default class Index extends Component {
           })
         }, 200)
       })
+    }
   }
 
-  shouldComponentUpdate(newProps, newState) {
-    console.log('index', 'shouldComponentUpdate', newState)
-    if (Object.keys(newState.heweather).length !== 0) return true
-    return false
-  }
-
+  /**
+   * 获取近期天气预报
+   */
   getWeather() {
     return new Promise((resolve) => {
       Taro.request({
@@ -77,41 +79,56 @@ export default class Index extends Component {
   }
 
   onDateClick = (date) => {
+    console.log('onDateClick')
+    this._date = generateDate(date.__value.valueOf())
+
     this.setState({
-      date: date.__value.valueOf()
+      date: this._date.valueOf()
     })
   }
 
+  /**
+   * 生成上个月第一天日期
+   */
   onPrevMonth = () => {
     console.log('onPrevMonth')
     const { date } = this.state
 
-    const _date = generateDate(date).subtract(1, 'month')
+    this._date = generateDate(date).subtract(1, 'month')
     this.setState({
-      date: _date.valueOf()
+      date: this._date.valueOf()
     })
   }
 
+  /**
+   * 生成下个月第一天日期
+   */
   onNextMonth = () => {
     console.log('onNextMonth')
     const { date } = this.state
 
-    const _date = generateDate(date).add(1, 'month')
+    this._date = generateDate(date).add(1, 'month')
     this.setState({
-      date: _date.valueOf()
+      date: this._date.valueOf()
     })
   }
 
+  /**
+   * 生成昨天日期
+   */
   onPrevDay = () => {
     console.log('onPrevDay')
     const { date } = this.state
 
-    const _date = generateDate(date).subtract(1, 'day')
+    this._date = generateDate(date).subtract(1, 'day')
     this.setState({
-      date: _date.valueOf()
+      date: this._date.valueOf()
     })
   }
 
+  /**
+   * 监听下拉状态
+   */
   onDropDown = (val) => {
     console.log('onDropDown', val)
     this.setState({
@@ -119,18 +136,22 @@ export default class Index extends Component {
     })
   }
 
+  /**
+   * 生成明天日期
+   */
   onNextDay = () => {
     console.log('onNextDay')
     const { date } = this.state
 
-    const _date = generateDate(date).add(1, 'day')
+    this._date = generateDate(date).add(1, 'day')
     this.setState({
-      date: _date.valueOf()
+      date: this._date.valueOf()
     })
   }
 
   render() {
     const { showLogin, date, heweather, isDropDown } = this.state
+    const dayjsDate = generateDate(date)
 
     return (
       <View className='index'>
@@ -139,7 +160,7 @@ export default class Index extends Component {
             ? <Login onLoginState={this.onLoginState.bind(this)} />
             : <View>
               <Calendar
-                date={date}
+                dayjsDate={this._date}
                 heweather={heweather}
                 onDateClick={this.onDateClick.bind(this)}
                 onPrevMonth={this.onPrevMonth.bind(this)}
@@ -148,12 +169,21 @@ export default class Index extends Component {
                 isDropDown={isDropDown}
               />
               <Todo
-                date={date}
+                dayjsDate={this._date}
                 heweather={heweather}
                 onPrevDay={this.onPrevDay.bind(this)}
                 onNextDay={this.onNextDay.bind(this)}
                 isDropDown={isDropDown}
               />
+              <View
+                style={{
+                  position: 'fixed',
+                  bottom: '120rpx',
+                  right: '18rpx',
+                }}
+              >
+                <AtFab><Text className={'at-fab__icon at-icon at-icon-menu'}></Text></AtFab>
+              </View>
             </View>
         }
       </View>

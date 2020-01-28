@@ -3,7 +3,7 @@
 import Taro, { Component } from "@tarojs/taro"
 import { View, Text, Swiper, SwiperItem, ScrollView, Image } from "@tarojs/components"
 import Holiday from '../holiday'
-import { generateCalendar, generateDate, weekdaysMin, getWeatherInfo } from '../../lib/date'
+import { generateCalendar, generateDate, weekdaysMin, getWeatherIcon } from '../../lib/date'
 import { MAX_ROW, DATE_FORMAT } from '../../constant'
 
 import './index.scss'
@@ -23,12 +23,7 @@ export default class Calender extends Component {
       diff: 0,
     }
 
-    const { date, heweather, isDropDown } = props
-    this.heweather = heweather
-    this.isDropDown = isDropDown
-
-    const dayjsDate = generateDate(date)
-    const dateGroup = this.dateGroup(dayjsDate)
+    const { dayjsDate } = props
     const systemInfo = Taro.getSystemInfoSync()
 
     const windowWidth = 750;
@@ -38,7 +33,7 @@ export default class Calender extends Component {
 
     this.state = {
       windowHeight,
-      dateGroup,
+      dateGroup: [],
       dayjsDate,
       swiperHeight,
       dateItemHeight,
@@ -46,11 +41,9 @@ export default class Calender extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { date, heweather, isDropDown } = nextProps
-    this.heweather = heweather
-    this.isDropDown = isDropDown
+    const { dayjsDate } = nextProps
+    console.log('calendar', 'componentWillReceiveProps()', dayjsDate)
 
-    const dayjsDate = generateDate(date)
     const dateGroup = this.dateGroup(dayjsDate)
 
     this.setState({
@@ -130,7 +123,7 @@ export default class Calender extends Component {
         newIsDropDown = false
       }
 
-      if (newIsDropDown !== this.isDropDown) {
+      if (newIsDropDown !== this.props.isDropDown) {
         this.props.onDropDown(newIsDropDown)
 
         this.setState({
@@ -145,13 +138,9 @@ export default class Calender extends Component {
     this.touch.diff = 0
   }
 
-  dateItemClick(date) {
-    this.props.onDateClick(date)
-  }
-
   handleWeather(date) {
-    if (this.heweather[date] && !date.isPlaceholder) {
-      return getWeatherInfo(this.heweather[date])
+    if (this.props.heweather[date] && !date.isPlaceholder) {
+      return getWeatherIcon(this.props.heweather[date])
     }
 
     return false
@@ -233,7 +222,7 @@ export default class Calender extends Component {
                               style={{
                                 height: dateItemHeight,
                               }}
-                              onClick={() => this.dateItemClick(date)}
+                              onClick={() => this.props.onDateClick(date)}
                             >
                               {
                                 holiday
@@ -263,6 +252,6 @@ export default class Calender extends Component {
 }
 
 Calender.defaultProps = {
-  date: Date.now(),
+  dayjsDate: generateDate(),
   heweather: {},
 }

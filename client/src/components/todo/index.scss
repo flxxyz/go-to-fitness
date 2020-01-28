@@ -1,4 +1,7 @@
 @import "../../assets/layout.scss";
+@import "../../../node_modules/taro-ui/dist/style/components/load-more.scss";
+@import "../../../node_modules/taro-ui/dist/style/components/activity-indicator.scss";
+@import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
 .todo {
   .weather-tips {
@@ -9,8 +12,14 @@
     text-align: right;
     color: $字体辅助色;
   }
+
+  .no-todo-item {
+  }
+
+  .todo-item {
+  }
 }
 
-.hide {
+.switch {
   height: 40rpx;
 }

@@ -1,40 +1,36 @@
-import dayjs, {
-  Dayjs
-} from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
+import locale from 'dayjs/locale/zh-cn'
 import {
   MAX_ROW,
   MAX_COL,
   DATE_FORMAT,
   HEWEATHER_ICON,
 } from '../constant'
+import CalendarPlugin from './calendar'
 
-
-const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-const weekdaysShort = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-const weekdaysMin = ['日', '一', '二', '三', '四', '五', '六']
-const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
-const locale = {
-  name: 'zh',
-  weekdays,
-  weekdaysShort,
-  weekdaysMin,
-  months,
-}
+const weekdays = locale.weekdays
+const weekdaysShort = locale.weekdaysShort
+const weekdaysMin = locale.weekdaysMin
 
 /**
- * 
+ * 生成dayjs实例
  * @param {Dayjs} initialValue 
  * @returns {Dayjs}
  */
 const generateDate = (initialValue) => {
-  dayjs.locale(locale, null, true)
+  dayjs.extend(CalendarPlugin)
   let date = dayjs()
   if (initialValue) {
     date = dayjs(initialValue)
   }
-  return date.locale('zh')
+  return date.locale('zh-cn')
 }
 
+/**
+ * 获取自定义格式化后的日期字符串
+ * @param {Dayjs} date 
+ * @param {String} format 
+ */
 const getFormatDate = (date, format = 'YYYY-MM-DD HH:mm:ss') => {
   return date.format(format)
 }
@@ -67,6 +63,7 @@ const generateCalendar = (date) => {
 
     const item = {
       __value: thisDate,
+      lunar: thisDate.$calendar,
       value: thisDate.format(DATE_FORMAT),
       text: thisDate.date(),
       isPlaceholder,
@@ -78,7 +75,11 @@ const generateCalendar = (date) => {
   return list
 }
 
-const getWeatherInfo = (data) => {
+/**
+ * 获取base64格式天气图标
+ * @param {Dayjs} data 
+ */
+const getWeatherIcon = (data) => {
   const current = generateDate(`${data.date} ${data.ss}`)
   const now = generateDate()
   if (now.isAfter(current)) {
@@ -97,6 +98,5 @@ export {
   weekdays,
   weekdaysShort,
   weekdaysMin,
-  months,
-  getWeatherInfo,
+  getWeatherIcon,
 }
